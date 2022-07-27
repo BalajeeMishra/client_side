@@ -10,20 +10,15 @@ import {
   NavLink,
 } from "reactstrap";
 import classes from "./MainNavigation.module.css";
-import { Link } from "react-router-dom";
+import linkList from "./LinkList";
 const MainNavigation = () => {
-  const { SignOut, getCurrentUser } = useContext(authContext);
+  const { SignOut, authtoken, getCurrentUser } = useContext(authContext);
+  const [currentuser, setCurrentuser] = useState(undefined);
   const [collapsed, setCollapsed] = useState(true);
-  const [currentUser, setCurrentUser] = useState(undefined);
   const toggleNavbar = () => setCollapsed(!collapsed);
-
   useEffect(() => {
-    const user = getCurrentUser();
-    if (user) {
-      setCurrentUser(user);
-    }
-  }, []);
-
+    setCurrentuser(authtoken);
+  }, [getCurrentUser()]);
   return (
     <div className={classes.navigation}>
       <Navbar color="faded" light>
@@ -33,36 +28,21 @@ const MainNavigation = () => {
         <NavbarToggler onClick={toggleNavbar} className="me-2" />
         <Collapse isOpen={!collapsed} navbar>
           <Nav navbar>
-            {!currentUser && (
-              <>
+            {linkList.map((e, i) =>
+              !currentuser && i < 2 ? (
                 <NavItem>
-                  <NavLink href="/signup">Sign-up</NavLink>
+                  <NavLink href={e.path}>{e.item}</NavLink>
                 </NavItem>
+              ) : i >= 2 ? (
                 <NavItem>
-                  <NavLink href="/login">LogIn</NavLink>
+                  <NavLink href={e.path}>{e.item}</NavLink>
                 </NavItem>
-              </>
+              ) : (
+                ""
+              )
             )}
             <NavItem>
-              <NavLink onClick={SignOut}>Logout</NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink href="/addbattle">Add Battle</NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink href="/allbattle">All Battle</NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink href="/givecointouser">Give coin to user</NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink href="/listedgame">Listed Game</NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink href="/imageuploader">upload the image</NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink href="/superadmin">super admin</NavLink>
+              <NavLink onClick={SignOut}>logout</NavLink>
             </NavItem>
           </Nav>
         </Collapse>

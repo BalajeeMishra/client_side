@@ -40,22 +40,24 @@ function AllAdminPlayer() {
           </tr>
         </thead>
         <tbody>
-          {data.map((e, i) => (
-            <tr>
-              <th scope="row">{i + 1}</th>
-              <td>{e.phoneNo}</td>
-              <td>Admin player</td>
-              <td>
-                <button
-                  onClick={() => {
-                    deleteUser(e._id);
-                  }}
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
+          {data
+            ? data.map((e, i) => (
+                <tr>
+                  <th scope="row">{i + 1}</th>
+                  <td>{e.phoneNo}</td>
+                  <td>Admin player</td>
+                  <td>
+                    <button
+                      onClick={() => {
+                        deleteUser(e._id);
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))
+            : ""}
         </tbody>
       </Table>
     </div>

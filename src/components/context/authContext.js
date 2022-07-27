@@ -14,7 +14,8 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     const signout = await axios.get("/api/user/logout");
     if (signout.status == 200) {
-      alert("you are signed out successfully");
+      localStorage.removeItem("authtoken");
+      // alert("you are signed out successfully");
       setLoading(false);
     }
   };
@@ -47,9 +48,15 @@ export const AuthProvider = ({ children }) => {
     }
   };
   // currentuser
+
   const getCurrentUser = () => {
+    const decodedJwt = JSON.parse(atob(authtoken.split(".")[1]));
+    if (decodedJwt.exp * 1000 < Date.now()) {
+      localStorage.removeItem("authtoken");
+    }
     return localStorage.getItem("authtoken");
   };
+  const authtoken = localStorage.getItem("authtoken");
   return (
     <Provider
       value={{
@@ -60,6 +67,7 @@ export const AuthProvider = ({ children }) => {
         isRevealPwd,
         setIsRevealPwd,
         getCurrentUser,
+        authtoken,
       }}
     >
       {children}
